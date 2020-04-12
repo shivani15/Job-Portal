@@ -1,0 +1,12 @@
+# IntelliJ files
+*.iml
+.idea/
+
+# maven build output
+target/
+
+# MacOS 'hidden' files tracking directory 'state'
+.DS_Store
+
+#Database data
+/database/data
