@@ -1,18 +1,20 @@
 package com.upraised.database.entities;
 
-import com.sun.tools.javac.util.List;
-import com.upraised.database.datatypes.Category;
+
 import com.upraised.database.datatypes.City;
 import com.upraised.database.datatypes.Country;
-import com.upraised.database.datatypes.FundingStage;
 import com.upraised.database.datatypes.JobStatus;
 import com.upraised.database.datatypes.SeniorityLevel;
-import com.upraised.utils.Constants;
 import com.vladmihalcea.hibernate.type.array.ListArrayType;
-import java.sql.Timestamp;
+import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,13 +27,16 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "jobs")
 @TypeDef(
     name = "list-array",
     typeClass = ListArrayType.class
+)
+@TypeDef(
+    name = "pgsql_enum",
+    typeClass = PostgreSQLEnumType.class
 )
 public class Job extends BaseEntity {
 
@@ -43,16 +48,19 @@ public class Job extends BaseEntity {
   @Column(nullable = false)
   private String title;
 
-  @ManyToOne
-  @JoinColumn(name = "seniority_level", nullable = false)
+  @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "seniority_level", nullable = false)
+  @Type( type = "pgsql_enum" )
   private SeniorityLevel seniorityLevel;
 
-  @ManyToOne
-  @JoinColumn(name = "county", nullable = false)
+  @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "country", nullable = false)
+  @Type( type = "pgsql_enum" )
   private Country country;
 
-  @ManyToOne
-  @JoinColumn(name = "city", nullable = false)
+  @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "city", nullable = false)
+  @Type( type = "pgsql_enum" )
   private City city;
 
   @Column(columnDefinition = "text")
@@ -68,9 +76,10 @@ public class Job extends BaseEntity {
   @Column(nullable = false, updatable = false)
   private final Date postingDate = new Date();
 
-  @ManyToOne
-  @JoinColumn(name = "status", nullable = false)
-  private JobStatus status = new JobStatus(Constants.OPEN);
+  @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "job_status", nullable = false)
+  @Type( type = "pgsql_enum" )
+  private JobStatus status = JobStatus.OPEN;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "recruiter", nullable = false)
@@ -81,6 +90,13 @@ public class Job extends BaseEntity {
   private Company company;
 
   public Job() {
+  }
+
+  public Job(String title, SeniorityLevel seniorityLevel, Country country, City city) {
+    this.title = title;
+    this.seniorityLevel = seniorityLevel;
+    this.country = country;
+    this.city = city;
   }
 
   public Long getId() {
@@ -157,5 +173,28 @@ public class Job extends BaseEntity {
 
   public void setStatus(JobStatus status) {
     this.status = status;
+  }
+
+  public Map<String, Object> getRecruiter() {
+    Map<String, Object> map = new HashMap<>();
+    map.put("id",recruiter.getId());
+    map.put("name", recruiter.getName());
+    map.put("email", recruiter.getEmailId());
+    return map;
+  }
+
+  public void setRecruiter(Recruiter recruiter) {
+    this.recruiter = recruiter;
+  }
+
+  public Map<String, Object> getCompany() {
+    Map<String, Object> map = new HashMap<>();
+    map.put("id", company.getId());
+    map.put("name", company.getName());
+    return map;
+  }
+
+  public void setCompany(Company company) {
+    this.company = company;
   }
 }

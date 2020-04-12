@@ -1,5 +1,6 @@
 package com.upraised.database.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,6 +29,7 @@ public class Recruiter extends BaseEntity {
   @ManyToMany(fetch = FetchType.LAZY,
       cascade = CascadeType.ALL,
       mappedBy = "recruiters")
+  @JsonIgnore
   private Set<Company> companies;
 
   public Recruiter() {
@@ -55,5 +57,13 @@ public class Recruiter extends BaseEntity {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Set<Company> getCompanies() {
+    return companies;
+  }
+
+  public void setCompanies(Set<Company> companies) {
+    this.companies = companies;
   }
 }

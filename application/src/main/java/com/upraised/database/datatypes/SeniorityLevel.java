@@ -1,14 +1,22 @@
 package com.upraised.database.datatypes;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+public enum SeniorityLevel {
 
-@Entity
-@Table
-public class SeniorityLevel extends BaseEnum {
+  INTERNSHIP("Internship"),
+  ENTRY("Entry Level"),
+  MID_SENIOR("Mid Senior Level"),
+  SENIOR("Senior Level"),
+  DIRECTOR("Director"),
+  EXECUTIVE("Executive");
 
-  public SeniorityLevel() {
-    super();
+  private final String value;
+
+  SeniorityLevel(String value) {
+    this.value = value;
+  }
+
+  @Override
+  public String toString() {
+    return value;
   }
 }

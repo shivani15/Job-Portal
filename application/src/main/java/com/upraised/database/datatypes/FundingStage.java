@@ -1,18 +1,26 @@
 package com.upraised.database.datatypes;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+public enum FundingStage {
 
-@Entity
-@Table
-public class FundingStage extends BaseEnum {
+  IPO("IPO"),
+  MnA("M&A"),
+  SEED_ROUND("Seed Round"),
+  SERIESA("SeriesA"),
+  SERIESB("SeriesB"),
+  SERIESC("SeriesC"),
+  SERIESD("SeriesD"),
+  SERIESDPLUS("SeriesD+"),
+  UNFUNDED("Unfunded"),
+  UNKNOWN("Unknown");
 
-  public FundingStage() {
-    super();
+  private final String value;
+
+  FundingStage(String value) {
+    this.value = value;
   }
 
-  public FundingStage(String value) {
-    super(value);
+  @Override
+  public String toString() {
+    return value;
   }
 }

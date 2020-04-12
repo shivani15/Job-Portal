@@ -1,11 +1,14 @@
 package com.upraised.database.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.upraised.database.datatypes.Category;
 import com.upraised.database.datatypes.FundingStage;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "companies",
@@ -33,12 +37,14 @@ public class Company extends BaseEntity {
   @Column(nullable = false)
   private String name;
 
-  @ManyToOne
-  @JoinColumn(name = "funding_stage", nullable = false)
+  @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "funding_stage", nullable = false)
+  @Type( type = "pgsql_enum" )
   private FundingStage fundingStage;
 
-  @ManyToOne
-  @JoinColumn(name = "category")
+  @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "category", nullable = false)
+  @Type( type = "pgsql_enum" )
   private Category category;
 
   @NotBlank
@@ -52,15 +58,16 @@ public class Company extends BaseEntity {
 
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinTable(name = "company_recruiter",
-      joinColumns = @JoinColumn(name = "recruiter_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "company_id", referencedColumnName = "id"))
+      joinColumns = @JoinColumn(name = "company_id", referencedColumnName = "id"),
+      inverseJoinColumns = @JoinColumn(name = "recruiter_id", referencedColumnName = "id"))
+  @JsonIgnore
   private Set<Recruiter> recruiters;
 
   public Company() {}
 
-  public Company(String name, String fundingStage, String website) {
+  public Company(String name, FundingStage fundingStage, String website) {
     this.name = name;
-    this.fundingStage = new FundingStage(fundingStage);
+    this.fundingStage = fundingStage;
     this.website = website;
   }
 
@@ -80,8 +87,8 @@ public class Company extends BaseEntity {
     this.name = name;
   }
 
-  public String getFundingStage() {
-    return fundingStage.getValue();
+  public FundingStage getFundingStage() {
+    return fundingStage;
   }
 
   public void setFundingStage(FundingStage fundingStage) {
@@ -118,5 +125,13 @@ public class Company extends BaseEntity {
 
   public void setVisionStatement(String visionStatement) {
     this.visionStatement = visionStatement;
+  }
+
+  public Set<Recruiter> getRecruiters() {
+    return recruiters;
+  }
+
+  public void setRecruiters(Set<Recruiter> recruiters) {
+    this.recruiters = recruiters;
   }
 }

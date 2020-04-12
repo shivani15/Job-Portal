@@ -1,14 +1,10 @@
 package com.upraised.database.datatypes;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+public enum City{
 
-@Entity
-@Table
-public class City extends BaseEnum {
-
-  public City() {
-    super();
-  }
+  Mumbai,
+  Delhi,
+  Bangalore,
+  SF,
+  London
 }
