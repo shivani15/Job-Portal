@@ -26,14 +26,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class Api {
 
   @Autowired
-  CompanyManager companyManager;
+  private CompanyManager companyManager;
 
   @Autowired
-  JobManager jobManager;
+  private JobManager jobManager;
 
   @Autowired
-  RecruiterManager recruiterManager;
+  private RecruiterManager recruiterManager;
 
+  /* Get api call to get a all the companies or companies with passed company name
+  @param companyName - take company name as query param "name" to be searched
+  @return return the list of matching/all company details if any
+  * */
   @GetMapping("/company")
   public List<Company> getCompanies(@RequestParam(value="name", required=false) String companyName) {
     if(companyName == null)
@@ -42,6 +46,10 @@ public class Api {
     return companyManager.findByNameContainingIgnoreCase(companyName);
   }
 
+  /* Post api call to create a new company
+  @param company - parses and creates a Company object from the request body and validate the input
+  @return If successful, return the newly created company else throw appropriate exception.
+  * */
   @PostMapping("/company")
   public Company createCompany(@Valid @RequestBody Company company) {
     try{
@@ -52,6 +60,13 @@ public class Api {
     }
   }
 
+  /* Post api call to create a new job for the company with {companyId}
+  For now since we don't have authentication info, taking Recruiter-Id as an extra header
+  @param companyId - it a path param which has the company id for which the new job is to be created
+  @param recruiterId - read from Recruiter-Id header, contains the recruiter id who is adding the job
+  @param job - parses and creates a Job object from the request body and validate the input
+  @return If successful, return the newly created job else throw appropriate exception.
+  * */
   @PostMapping("/company/{companyId}/job")
   public Job createJob(@PathVariable Long companyId,
       @RequestHeader(value="Recruiter-Id") Long recruiterId,
