@@ -1,16 +1,21 @@
 package com.upraised.database.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
+import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import org.hibernate.annotations.TypeDef;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
 
+// Base entity class with basic common information for any entity like created/update time
+// for data entry which are auto-generated/updated on creation/updation of entry.
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @TypeDef(

@@ -1,7 +1,6 @@
 package com.upraised.database.datatypes;
 
 public enum FundingStage {
-
   IPO,
   MnA,
   SEED_ROUND,

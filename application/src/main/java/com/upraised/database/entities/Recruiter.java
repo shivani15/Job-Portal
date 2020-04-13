@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+/* This class in an entity is mapped to recruiters table in postgres database. */
 @Entity
 @Table(name = "recruiters")
 public class Recruiter extends BaseEntity {
@@ -28,6 +29,7 @@ public class Recruiter extends BaseEntity {
   @Column(nullable = false)
   private String name;
 
+  /* Single recruiter can manage jobs for one or more companies. */
   @ManyToMany(fetch = FetchType.LAZY,
       cascade = CascadeType.ALL,
       mappedBy = "recruiters")

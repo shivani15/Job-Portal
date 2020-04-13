@@ -16,13 +16,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import org.hibernate.annotations.Type;
 
+/* This class in an entity is mapped to companies table in postgres database. */
 @Entity
 @Table(name = "companies",
     uniqueConstraints={
@@ -58,6 +58,7 @@ public class Company extends BaseEntity {
   @Column(columnDefinition = "text")
   private String visionStatement;
 
+  /* Single company can have multiple recruiters. */
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinTable(name = "company_recruiter",
       joinColumns = @JoinColumn(name = "company_id", referencedColumnName = "id"),

@@ -6,7 +6,6 @@ import com.upraised.database.datatypes.Country;
 import com.upraised.database.datatypes.JobStatus;
 import com.upraised.database.datatypes.SeniorityLevel;
 import com.vladmihalcea.hibernate.type.array.ListArrayType;
-import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +28,7 @@ import javax.validation.constraints.NotBlank;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
+/* This class in an entity is mapped to jobs table in postgres database. */
 @Entity
 @Table(name = "jobs")
 @TypeDef(
@@ -70,25 +70,28 @@ public class Job extends BaseEntity {
 
   private String websiteLink;
 
+  /* This is an auto-generated field with the current date value.*/
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false, updatable = false)
   private final Date postingDate = new Date();
 
+  /* Default state for any new opening is OPEN */
   @Enumerated(EnumType.STRING)
   @Column(columnDefinition = "job_status", nullable = false)
   @Type( type = "pgsql_enum" )
   private JobStatus status = JobStatus.OPEN;
 
+  /* One job is posted/managed by one recruiter, but a single recruiter can have multiple jobs.*/
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "recruiter", nullable = false)
   private Recruiter recruiter;
 
+  /* One job is linked to only one company, but a single company can have multiple jobs.*/
   @ManyToOne
   @JoinColumn(name = "company", nullable = false)
   private Company company;
 
-  public Job() {
-  }
+  public Job() {}
 
   public Long getId() {
     return id;
