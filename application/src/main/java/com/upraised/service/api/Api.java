@@ -15,6 +15,8 @@ import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,12 +51,12 @@ public class Api {
 
   /* Post api call to create a new company
   @param company - parses and creates a Company object from the request body and validate the input
-  @return If successful, return the newly created company else throw appropriate exception.
+  @return If successful, return 201(Created) with the newly created company else throw appropriate exception.
   * */
   @PostMapping("/company")
-  public Company createCompany(@Valid @RequestBody Company company) {
+  public ResponseEntity<Company> createCompany(@Valid @RequestBody Company company) {
     try{
-      return companyManager.save(company);
+      return ResponseEntity.status(HttpStatus.CREATED).body(companyManager.save(company));
     } catch (DataIntegrityViolationException e) {
       throw new HttpConflictException("Company with name " + company.getName()
           + " and website " + company.getWebsite() + " already exists");
@@ -66,10 +68,10 @@ public class Api {
   @param companyId - it a path param which has the company id for which the new job is to be created
   @param recruiterId - read from Recruiter-Id header, contains the recruiter id who is adding the job
   @param job - parses and creates a Job object from the request body and validate the input
-  @return If successful, return the newly created job else throw appropriate exception.
+  @return If successful, return 201(Created) with the newly created job else throw appropriate exception.
   * */
   @PostMapping("/company/{companyId}/job")
-  public Job createJob(@PathVariable Long companyId,
+  public ResponseEntity<Job> createJob(@PathVariable Long companyId,
       @RequestHeader(value="Recruiter-Id") Long recruiterId,
       @Valid @RequestBody Job job) {
 
@@ -91,7 +93,7 @@ public class Api {
     job.setCompany(opCompany.get());
     job.setRecruiter(opRecruiter.get());
 
-    return jobManager.save(job);
+    return ResponseEntity.status(HttpStatus.CREATED).body(jobManager.save(job));
   }
 
   /* Get api call to get all the jobs filter based on passed params
