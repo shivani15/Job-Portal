@@ -1,11 +1,12 @@
-package com.upraised.service;
+package com.upraised.service.api;
 
 import com.upraised.database.entities.Company;
 import com.upraised.database.entities.Job;
 import com.upraised.database.entities.Recruiter;
-import com.upraised.database.repos.CompanyManager;
-import com.upraised.database.repos.JobManager;
-import com.upraised.database.repos.RecruiterManager;
+import com.upraised.service.repos.CompanyManager;
+import com.upraised.service.job.JobFilterBuilder;
+import com.upraised.service.repos.JobManager;
+import com.upraised.service.repos.RecruiterManager;
 import com.upraised.exceptionUtils.HttpConflictException;
 import com.upraised.exceptionUtils.HttpForbiddenException;
 import com.upraised.exceptionUtils.HttpNotFoundException;
@@ -34,7 +35,7 @@ public class Api {
   @Autowired
   private RecruiterManager recruiterManager;
 
-  /* Get api call to get a all the companies or companies with passed company name
+  /* Get api call to get all the companies or companies with passed company name
   @param companyName - take company name as query param "name" to be searched
   @return return the list of matching/all company details if any
   * */
@@ -91,5 +92,28 @@ public class Api {
     job.setRecruiter(opRecruiter.get());
 
     return jobManager.save(job);
+  }
+
+  /* Get api call to get all the jobs filter based on passed params
+  @param companyName - take list of company names as query param "company" to be filtered
+  @param countries - take list of countries as query param "country" to be filtered
+  @param cities - take list of cities as query param "city" to be filtered
+  @param senioritylevels - take list of senioritylevels as query param "seniority_level" to be filtered
+  @return return the list of matching/all job details if any
+  * */
+  @GetMapping("/job")
+  public List<Job> getJobs(@RequestParam(value="company", required=false) List<String> companyNames,
+      @RequestParam(value="country", required=false) List<String> countries,
+      @RequestParam(value="city", required=false) List<String> cities,
+      @RequestParam(value="title", required=false) List<String> titles,
+      @RequestParam(value="seniority_level", required=false) List<String> senioritylevels) {
+
+    JobFilterBuilder builder = jobManager.createJobFilterBuilder()
+        .addFilter(companyNames, "company")
+        .addFilter(countries, "country")
+        .addFilter(cities, "cities")
+        .addFilter(titles, "title")
+        .addFilter(senioritylevels, "seniority_level");
+     return jobManager.filterJobs(builder);
   }
 }

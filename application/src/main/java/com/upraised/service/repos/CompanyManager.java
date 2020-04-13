@@ -1,4 +1,4 @@
-package com.upraised.database.repos;
+package com.upraised.service.repos;
 
 import com.upraised.database.entities.Company;
 import java.util.List;

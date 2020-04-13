@@ -1,4 +1,4 @@
-package com.upraised.database.repos;
+package com.upraised.service.repos;
 
 import com.upraised.database.entities.Recruiter;
 import java.util.Optional;
