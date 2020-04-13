@@ -45,7 +45,7 @@ public class Company extends BaseEntity {
   private FundingStage fundingStage;
 
   @Enumerated(EnumType.STRING)
-  @Column(columnDefinition = "category", nullable = false)
+  @Column(columnDefinition = "category")
   @Type( type = "pgsql_enum" )
   private Category category;
 
@@ -64,14 +64,6 @@ public class Company extends BaseEntity {
       inverseJoinColumns = @JoinColumn(name = "recruiter_id", referencedColumnName = "id"))
   @JsonIgnore
   private Set<Recruiter> recruiters;
-
-  public Company() {}
-
-  public Company(String name, FundingStage fundingStage, String website) {
-    this.name = name;
-    this.fundingStage = fundingStage;
-    this.website = website;
-  }
 
   public Long getId() {
     return id;

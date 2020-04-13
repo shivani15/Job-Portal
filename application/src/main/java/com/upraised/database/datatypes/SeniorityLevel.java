@@ -2,21 +2,11 @@ package com.upraised.database.datatypes;
 
 public enum SeniorityLevel {
 
-  INTERNSHIP("Internship"),
-  ENTRY("Entry Level"),
-  MID_SENIOR("Mid Senior Level"),
-  SENIOR("Senior Level"),
-  DIRECTOR("Director"),
-  EXECUTIVE("Executive");
+  INTERNSHIP,
+  ENTRY_LEVEL,
+  MID_SENIOR_LEVEL,
+  SENIOR_LEVEL,
+  DIRECTOR,
+  EXECUTIVE;
 
-  private final String value;
-
-  SeniorityLevel(String value) {
-    this.value = value;
-  }
-
-  @Override
-  public String toString() {
-    return value;
-  }
 }

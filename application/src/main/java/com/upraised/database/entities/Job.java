@@ -35,10 +35,6 @@ import org.hibernate.annotations.TypeDef;
     name = "list-array",
     typeClass = ListArrayType.class
 )
-@TypeDef(
-    name = "pgsql_enum",
-    typeClass = PostgreSQLEnumType.class
-)
 public class Job extends BaseEntity {
 
   @Id
@@ -92,13 +88,6 @@ public class Job extends BaseEntity {
   private Company company;
 
   public Job() {
-  }
-
-  public Job(String title, SeniorityLevel seniorityLevel, Country country, City city) {
-    this.title = title;
-    this.seniorityLevel = seniorityLevel;
-    this.country = country;
-    this.city = city;
   }
 
   public Long getId() {
