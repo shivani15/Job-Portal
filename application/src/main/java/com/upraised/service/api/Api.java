@@ -12,6 +12,7 @@ import com.upraised.exceptionUtils.HttpForbiddenException;
 import com.upraised.exceptionUtils.HttpNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -85,7 +86,8 @@ public class Api {
       throw new HttpNotFoundException("Company not found with id " + companyId);
     }
 
-    if (!opCompany.get().getRecruiters().contains(opRecruiter.get())) {
+    Set<Recruiter> recruiters = opCompany.get().getRecruiters();
+    if (recruiters == null || !recruiters.contains(opRecruiter.get())) {
       throw new HttpForbiddenException("Recruiter with id " + recruiterId + " not allowed to add jobs "
           + "for company with id " + companyId);
     }
