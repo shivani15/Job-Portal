@@ -14,12 +14,12 @@ Basic application service to support the following functionalites:
 ## Setup
 
 * cd in the root directory
-* Run the following command to build the docker for Application and Databade(postgres)
+* Run the following command to build the docker image for Application and Databade(postgres)
     ```
     make build
     ```
   This will setup the docker with all the dependencies for running the service. 
-* Run the following command to load the inital data in the database##
+* Run the following command to create the db schema and load the inital data in the database
     ```
     make bootstrap-data
     ```
