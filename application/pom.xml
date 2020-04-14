@@ -14,10 +14,22 @@
     <version>2.1.7.RELEASE</version>
   </parent>
 
+  <properties>
+    <testcontainers.version>1.11.2</testcontainers.version>
+    <skip.unit.tests>false</skip.unit.tests>
+    <skip.integration.tests>true</skip.integration.tests>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -54,6 +66,27 @@
       <artifactId>hibernate-types-52</artifactId>
       <version>2.9.8</version>
     </dependency>
+
+    <!--	Test Dependencies		-->
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+      <version>${testcontainers.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${testcontainers.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -62,7 +95,54 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>**/*Test.java</include>
+          </includes>
+          <excludes>
+            <exclude>**/*IntegrationTest.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>integration-tests</id>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+            <configuration>
+              <includes>
+                <include>**/*.java</include>
+                <include>**/*IntegrationTest.java</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+    <profile>
+      <id>integration-test</id>
+      <properties>
+        <skip.integration.tests>false</skip.integration.tests>
+        <skip.unit.tests>true</skip.unit.tests>
+      </properties>
+    </profile>
+  </profiles>
 
 </project>
