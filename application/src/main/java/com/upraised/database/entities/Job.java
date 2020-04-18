@@ -1,8 +1,11 @@
 package com.upraised.database.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.upraised.database.datatypes.City;
 import com.upraised.database.datatypes.Country;
+import com.upraised.database.datatypes.Currency;
 import com.upraised.database.datatypes.JobStatus;
 import com.upraised.database.datatypes.SeniorityLevel;
 import com.vladmihalcea.hibernate.type.array.ListArrayType;
@@ -11,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -35,6 +39,7 @@ import org.hibernate.annotations.TypeDef;
     name = "list-array",
     typeClass = ListArrayType.class
 )
+@JsonInclude(Include.NON_NULL)
 public class Job extends BaseEntity {
 
   @Id
@@ -69,6 +74,9 @@ public class Job extends BaseEntity {
   private List<String> skills;
 
   private String websiteLink;
+
+  @Embedded
+  private Salary salary;
 
   /* This is an auto-generated field with the current date value.*/
   @Temporal(TemporalType.TIMESTAMP)
@@ -167,6 +175,14 @@ public class Job extends BaseEntity {
 
   public void setStatus(JobStatus status) {
     this.status = status;
+  }
+
+  public Salary getSalary() {
+    return salary;
+  }
+
+  public void setSalary(Salary salary) {
+    this.salary = salary;
   }
 
   public Map<String, Object> getRecruiter() {

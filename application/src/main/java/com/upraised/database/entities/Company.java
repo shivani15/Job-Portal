@@ -1,6 +1,8 @@
 package com.upraised.database.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.upraised.database.datatypes.Category;
 import com.upraised.database.datatypes.FundingStage;
 import java.util.Set;
@@ -28,6 +30,7 @@ import org.hibernate.annotations.Type;
     uniqueConstraints={
     @UniqueConstraint(columnNames = {"name", "website"})
 })
+@JsonInclude(Include.NON_NULL)
 public class Company extends BaseEntity {
 
   @Id

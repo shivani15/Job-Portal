@@ -11,6 +11,8 @@ import com.upraised.database.datatypes.SeniorityLevel;
 import com.upraised.database.entities.Company;
 import com.upraised.database.entities.Job;
 import com.upraised.database.entities.Recruiter;
+import com.upraised.database.entities.Salary;
+import com.upraised.exceptionUtils.HttpBadRequestException;
 import com.upraised.exceptionUtils.HttpConflictException;
 import com.upraised.exceptionUtils.HttpForbiddenException;
 import com.upraised.exceptionUtils.HttpNotFoundException;
@@ -166,6 +168,24 @@ public class ApiTest {
     when(mockCompanyManager.findById(any())).thenReturn((Optional<Company>)Optional.of(company));
 
     ResponseEntity<Job> response = testApiInterface.createJob(company.getId(), recruiter.getId(), createTestJob());
+  }
+
+  @Test(expected = HttpBadRequestException.class)
+  public void testCreateJobWithInvalidSalary() {
+
+    Set<Company> companies = new HashSet<Company>();
+    companies.add(testCompaniesList.get(0));
+    companies.add(testCompaniesList.get(1));
+    Company company = testCompaniesList.get(0);
+    Recruiter recruiter = createTestRecruiterForCompany(companies);
+
+    when(mockRecruiterManager.findById(any())).thenReturn((Optional<Recruiter>)Optional.of(recruiter));
+    when(mockCompanyManager.findById(any())).thenReturn((Optional<Company>)Optional.of(company));
+
+    Job testJob = createTestJob();
+    testJob.setSalary(new Salary(1000,2000, null));
+
+    ResponseEntity<Job> response = testApiInterface.createJob(company.getId(), recruiter.getId(), testJob);
   }
 
   @Test

@@ -1,8 +1,11 @@
 package com.upraised.service.api;
 
+import com.upraised.database.datatypes.Currency;
 import com.upraised.database.entities.Company;
 import com.upraised.database.entities.Job;
 import com.upraised.database.entities.Recruiter;
+import com.upraised.database.entities.Salary;
+import com.upraised.exceptionUtils.HttpBadRequestException;
 import com.upraised.service.repos.CompanyManager;
 import com.upraised.service.job.JobFilterBuilder;
 import com.upraised.service.repos.JobManager;
@@ -13,7 +16,11 @@ import com.upraised.exceptionUtils.HttpNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -94,6 +101,16 @@ public class Api {
 
     job.setCompany(opCompany.get());
     job.setRecruiter(opRecruiter.get());
+
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    Validator validator = factory.getValidator();
+
+    if (job.getSalary() != null) {
+      Set<ConstraintViolation<Salary>> constraintViolations = validator.validate( job.getSalary() );
+      if (constraintViolations.size() > 0) {
+        throw new HttpBadRequestException("Salary values are not valid, one of the field can't be null!");
+      }
+    }
 
     return ResponseEntity.status(HttpStatus.CREATED).body(jobManager.save(job));
   }

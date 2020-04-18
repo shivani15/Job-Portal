@@ -1,6 +1,8 @@
 package com.upraised.database.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,6 +18,7 @@ import javax.persistence.Table;
 /* This class in an entity is mapped to recruiters table in postgres database. */
 @Entity
 @Table(name = "recruiters")
+@JsonInclude(Include.NON_NULL)
 public class Recruiter extends BaseEntity {
 
   @Id
