@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.upraised.database.datatypes.Category;
 import com.upraised.database.datatypes.FundingStage;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -66,8 +69,14 @@ public class Company extends BaseEntity {
   @JoinTable(name = "company_recruiter",
       joinColumns = @JoinColumn(name = "company_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "recruiter_id", referencedColumnName = "id"))
-  @JsonIgnore
   private Set<Recruiter> recruiters;
+
+  /* Single company can have founders recruiters. */
+  @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinTable(name = "company_founder",
+      joinColumns = @JoinColumn(name = "company_id", referencedColumnName = "id"),
+      inverseJoinColumns = @JoinColumn(name = "founder_id", referencedColumnName = "id"))
+  private Set<Founder> founders;
 
   public Long getId() {
     return id;
@@ -125,11 +134,44 @@ public class Company extends BaseEntity {
     this.visionStatement = visionStatement;
   }
 
-  public Set<Recruiter> getRecruiters() {
+  @JsonIgnore
+  public Set<Recruiter> getRecruitersList() {
     return recruiters;
+  }
+
+  public Set<Map<String, Object>> getRecruiters() {
+    if (recruiters.isEmpty()) return null;
+
+    Set<Map<String, Object>> recruiterInfo = new HashSet<>();
+    for (Recruiter recruiter: recruiters) {
+      Map<String, Object> map = new HashMap<>();
+      map.put("id", recruiter.getId());
+      map.put("name", recruiter.getName());
+      map.put("email", recruiter.getEmailId());
+      recruiterInfo.add(map);
+    }
+    return recruiterInfo;
   }
 
   public void setRecruiters(Set<Recruiter> recruiters) {
     this.recruiters = recruiters;
+  }
+
+  public Set<Map<String, Object>> getFounders() {
+    if (founders.isEmpty()) return null;
+
+    Set<Map<String, Object>> founderInfo = new HashSet<>();
+    for (Founder founder: founders) {
+      Map<String, Object> map = new HashMap<>();
+      map.put("id", founder.getId());
+      map.put("name", founder.getName());
+      map.put("description", founder.getDescription());
+      founderInfo.add(map);
+    }
+    return founderInfo;
+  }
+
+  public void setFounders(Set<Founder> founders) {
+    this.founders = founders;
   }
 }

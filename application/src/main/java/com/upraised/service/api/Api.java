@@ -93,7 +93,7 @@ public class Api {
       throw new HttpNotFoundException("Company not found with id " + companyId);
     }
 
-    Set<Recruiter> recruiters = opCompany.get().getRecruiters();
+    Set<Recruiter> recruiters = opCompany.get().getRecruitersList();
     if (recruiters == null || !recruiters.contains(opRecruiter.get())) {
       throw new HttpForbiddenException("Recruiter with id " + recruiterId + " not allowed to add jobs "
           + "for company with id " + companyId);

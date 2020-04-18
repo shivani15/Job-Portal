@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.upraised.database.datatypes.City;
 import com.upraised.database.datatypes.Country;
-import com.upraised.database.datatypes.Currency;
 import com.upraised.database.datatypes.JobStatus;
 import com.upraised.database.datatypes.SeniorityLevel;
 import com.vladmihalcea.hibernate.type.array.ListArrayType;
