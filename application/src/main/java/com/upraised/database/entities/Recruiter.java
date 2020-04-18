@@ -70,7 +70,7 @@ public class Recruiter extends BaseEntity {
   }
 
   public Set<Map<String, Object>> getCompany() {
-    if (companies.isEmpty()) return null;
+    if (companies ==null || companies.isEmpty()) return null;
 
     Set<Map<String, Object>> companyInfo = new HashSet<>();
     for (Company company: companies) {

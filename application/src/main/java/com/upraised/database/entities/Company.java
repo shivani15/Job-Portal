@@ -140,7 +140,7 @@ public class Company extends BaseEntity {
   }
 
   public Set<Map<String, Object>> getRecruiters() {
-    if (recruiters.isEmpty()) return null;
+    if (recruiters == null || recruiters.isEmpty()) return null;
 
     Set<Map<String, Object>> recruiterInfo = new HashSet<>();
     for (Recruiter recruiter: recruiters) {
@@ -158,7 +158,7 @@ public class Company extends BaseEntity {
   }
 
   public Set<Map<String, Object>> getFounders() {
-    if (founders.isEmpty()) return null;
+    if (founders == null || founders.isEmpty()) return null;
 
     Set<Map<String, Object>> founderInfo = new HashSet<>();
     for (Founder founder: founders) {

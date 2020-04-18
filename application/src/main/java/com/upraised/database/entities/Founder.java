@@ -1,6 +1,8 @@
 package com.upraised.database.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -18,11 +20,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "founders")
+@JsonInclude(Include.NON_NULL)
 public class Founder extends BaseEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "recruiter_generator")
-  @SequenceGenerator(name="recruiter_generator", sequenceName = "recruiters_id_seq", allocationSize=1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "founders_generator")
+  @SequenceGenerator(name="founders_generator", sequenceName = "founders_id_seq", allocationSize=1)
   private Long id;
 
   @Column(nullable = false)
@@ -67,7 +70,7 @@ public class Founder extends BaseEntity {
   }
 
   public Set<Map<String, Object>> getCompany() {
-    if (companies.isEmpty()) return null;
+    if (companies ==null || companies.isEmpty()) return null;
 
     Set<Map<String, Object>> companyInfo = new HashSet<>();
     for (Company company: companies) {

@@ -16,7 +16,6 @@ CREATE TYPE public.category AS ENUM (
     'TRAVELTECH'
 );
 
-
 --
 -- Name: city; Type: TYPE; Schema: public; Owner: test
 --
@@ -29,7 +28,6 @@ CREATE TYPE public.city AS ENUM (
     'London'
 );
 
-
 --
 -- Name: country; Type: TYPE; Schema: public; Owner: test
 --
@@ -41,6 +39,15 @@ CREATE TYPE public.country AS ENUM (
     'Australia'
 );
 
+--
+-- Name: currency; Type: TYPE; Schema: public; Owner: test
+--
+
+CREATE TYPE public.currency AS ENUM (
+    'INR',
+    'USD',
+    'EUR'
+);
 
 --
 -- Name: funding_stage; Type: TYPE; Schema: public; Owner: test
@@ -59,7 +66,6 @@ CREATE TYPE public.funding_stage AS ENUM (
     'UNKNOWN'
 );
 
-
 --
 -- Name: job_status; Type: TYPE; Schema: public; Owner: test
 --
@@ -68,7 +74,6 @@ CREATE TYPE public.job_status AS ENUM (
     'OPEN',
     'CLOSED'
 );
-
 
 --
 -- Name: seniority_level; Type: TYPE; Schema: public; Owner: test
@@ -82,7 +87,6 @@ CREATE TYPE public.seniority_level AS ENUM (
     'DIRECTOR',
     'EXECUTIVE'
 );
-
 
 --
 -- Name: companies_id_seq; Type: SEQUENCE; Schema: public; Owner: test
@@ -117,6 +121,15 @@ CREATE TABLE public.companies (
 );
 
 --
+-- Name: company_founder; Type: TABLE; Schema: public; Owner: test
+--
+
+CREATE TABLE public.company_founder (
+    company_id bigint NOT NULL,
+    founder_id bigint NOT NULL
+);
+
+--
 -- Name: company_recruiter; Type: TABLE; Schema: public; Owner: test
 --
 
@@ -125,6 +138,28 @@ CREATE TABLE public.company_recruiter (
     recruiter_id bigint NOT NULL
 );
 
+--
+-- Name: founders_id_seq; Type: SEQUENCE; Schema: public; Owner: test
+--
+
+CREATE SEQUENCE public.founders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+--
+-- Name: founders; Type: TABLE; Schema: public; Owner: test
+--
+
+CREATE TABLE public.founders (
+    id bigint DEFAULT nextval('public.founders_id_seq'::regclass) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description text,
+    name character varying(255) NOT NULL
+);
 
 --
 -- Name: jobs_id_seq; Type: SEQUENCE; Schema: public; Owner: test
@@ -136,7 +171,6 @@ CREATE SEQUENCE public.jobs_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
 
 --
 -- Name: jobs; Type: TABLE; Schema: public; Owner: test
@@ -156,9 +190,11 @@ CREATE TABLE public.jobs (
     title character varying(255) NOT NULL,
     website_link character varying(255),
     company bigint NOT NULL,
-    recruiter bigint NOT NULL
+    recruiter bigint NOT NULL,
+    currency public.currency,
+    max_salary integer,
+    min_salary integer
 );
-
 
 --
 -- Name: recruiters_id_seq; Type: SEQUENCE; Schema: public; Owner: test
@@ -183,7 +219,6 @@ CREATE TABLE public.recruiters (
     name character varying(255) NOT NULL
 );
 
-
 --
 -- Name: companies companies_pkey; Type: CONSTRAINT; Schema: public; Owner: test
 --
@@ -193,11 +228,27 @@ ALTER TABLE ONLY public.companies
 
 
 --
+-- Name: company_founder company_founder_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+--
+
+ALTER TABLE ONLY public.company_founder
+    ADD CONSTRAINT company_founder_pkey PRIMARY KEY (company_id, founder_id);
+
+
+--
 -- Name: company_recruiter company_recruiter_pkey; Type: CONSTRAINT; Schema: public; Owner: test
 --
 
 ALTER TABLE ONLY public.company_recruiter
     ADD CONSTRAINT company_recruiter_pkey PRIMARY KEY (company_id, recruiter_id);
+
+
+--
+-- Name: founders founders_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+--
+
+ALTER TABLE ONLY public.founders
+    ADD CONSTRAINT founders_pkey PRIMARY KEY (id);
 
 
 --
@@ -257,10 +308,30 @@ ALTER TABLE ONLY public.company_recruiter
 
 
 --
+-- Name: company_founder fk98er25tevg0hsg1m4v35l693o; Type: FK CONSTRAINT; Schema: public; Owner: test
+--
+
+ALTER TABLE ONLY public.company_founder
+    ADD CONSTRAINT fk98er25tevg0hsg1m4v35l693o FOREIGN KEY (founder_id) REFERENCES public.founders(id);
+
+
+--
 -- Name: company_recruiter fkds6n2cf0t3jl66nirocbqhbuj; Type: FK CONSTRAINT; Schema: public; Owner: test
 --
 
 ALTER TABLE ONLY public.company_recruiter
     ADD CONSTRAINT fkds6n2cf0t3jl66nirocbqhbuj FOREIGN KEY (company_id) REFERENCES public.companies(id);
 
+
+--
+-- Name: company_founder fksswv10901ivpmw9gvmvpg0xhu; Type: FK CONSTRAINT; Schema: public; Owner: test
+--
+
+ALTER TABLE ONLY public.company_founder
+    ADD CONSTRAINT fksswv10901ivpmw9gvmvpg0xhu FOREIGN KEY (company_id) REFERENCES public.companies(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
 
